@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 
 
 class Position(models.Model):
@@ -16,6 +17,9 @@ class Worker(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.position})"
+    
+    def get_absolute_url(self):
+        return reverse("manager:worker-detail", kwargs={"pk": self.pk})
 
 
 class TaskType(models.Model):
