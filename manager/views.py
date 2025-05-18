@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from .models import Worker, Task
 from .forms import WorkerCreateForm
 from django.views import generic
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 @login_required
 def index(request):
@@ -24,7 +24,7 @@ def index(request):
     return render(request, "manager/index.html", context=context)
 
 
-class WorkerListView(generic.ListView):
+class WorkerListView(LoginRequiredMixin, generic.ListView):
     """Generic class-based view for a list of workers."""
     model = Worker
     template_name = "manager/worker-list.html"
@@ -33,20 +33,20 @@ class WorkerListView(generic.ListView):
     queryset = Worker.objects.select_related()
 
 
-class WorkerDetailView(generic.DetailView):
+class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     """Generic class-based view for a worker's detail."""
     model = Worker
     template_name = "manager/worker-detail.html"
     context_object_name = "worker"
 
 
-class WorkerCreateView(generic.CreateView):
+class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = WorkerCreateForm
     template_name = "manager/worker-form.html"
     success_url = reverse_lazy("manager:worker-list")
 
 
-class TaskListView(generic.ListView):
+class TaskListView(LoginRequiredMixin, generic.ListView):
     """Generic class-based view for a list of tasks."""
     model = Task
     template_name = "manager/task-list.html"
@@ -55,14 +55,14 @@ class TaskListView(generic.ListView):
     queryset = Task.objects.prefetch_related()
 
 
-class TaskDetailView(generic.DetailView):
+class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     """Generic class-based view for a task's detail."""
     model = Task
     template_name = "manager/task-detail.html"
     context_object_name = "task"
 
 
-class TaskCreateView(generic.CreateView):
+class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     """Generic class-based view for creating a new task."""
     model = Task
     template_name = "manager/task-form.html"
