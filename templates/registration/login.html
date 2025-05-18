@@ -19,6 +19,10 @@
 
   <input type="submit" value="Login" id="login" class="btn btn-primary" />
   <input type="hidden" name="next" value="{{ next }}" />
-</form>
+</form><br>
+<p>Don't have an account yet?<a href="{% url 'manager:worker-create' %}">
+    Register here
+</a></p>
+
 
 {% endblock %}

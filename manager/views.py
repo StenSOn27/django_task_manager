@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 from .models import Worker, Task
+from .forms import WorkerCreateForm
 from django.views import generic
 
 
@@ -38,6 +40,12 @@ class WorkerDetailView(generic.DetailView):
     context_object_name = "worker"
 
 
+class WorkerCreateView(generic.CreateView):
+    form_class = WorkerCreateForm
+    template_name = "manager/worker-form.html"
+    success_url = reverse_lazy("manager:worker-list")
+
+
 class TaskListView(generic.ListView):
     """Generic class-based view for a list of tasks."""
     model = Task
@@ -52,3 +60,11 @@ class TaskDetailView(generic.DetailView):
     model = Task
     template_name = "manager/task-detail.html"
     context_object_name = "task"
+
+
+class TaskCreateView(generic.CreateView):
+    """Generic class-based view for creating a new task."""
+    model = Task
+    template_name = "manager/task-form.html"
+    fields = ["name", "description", "deadline", "priority", "task_type", "assignees"]
+    success_url = reverse_lazy("manager:task-list")

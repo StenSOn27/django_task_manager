@@ -2,7 +2,9 @@
 {% load crispy_forms_filters %}
 {% block content %}
     <h1>
-      Tasks List
+      Tasks List <a href="{% url 'manager:task-create' %}" class="btn btn-primary" style="float: right;">
+        Create
+      </a>
     </h1>
     {% if task_list %}
     <table class="table">
