@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Worker, Task
-
+from django.views import generic
 
 @login_required
 def index(request):
@@ -19,3 +19,12 @@ def index(request):
     }
 
     return render(request, "manager/index.html", context=context)
+
+
+class WorkerListView(generic.ListView):
+
+    model = Worker
+    template_name = "manager/worker-list.html"
+    context_object_name = "worker_list"
+    paginate_by = 5
+    queryset = Worker.objects.select_related()
