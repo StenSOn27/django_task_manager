@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
 from .models import Worker, Task
 from django.views import generic
-from django.contrib.auth.views import LoginView
 
 
+@login_required
 def index(request):
     """View function for the home page of the site."""
     num_workers = Worker.objects.count()
@@ -37,3 +36,19 @@ class WorkerDetailView(generic.DetailView):
     model = Worker
     template_name = "manager/worker-detail.html"
     context_object_name = "worker"
+
+
+class TaskListView(generic.ListView):
+    """Generic class-based view for a list of tasks."""
+    model = Task
+    template_name = "manager/task-list.html"
+    context_object_name = "task_list"
+    paginate_by = 5
+    queryset = Task.objects.prefetch_related()
+
+
+class TaskDetailView(generic.DetailView):
+    """Generic class-based view for a task's detail."""
+    model = Task
+    template_name = "manager/task-detail.html"
+    context_object_name = "task"
