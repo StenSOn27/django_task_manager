@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Worker, Task
 from django.views import generic
 
-@login_required
+
 def index(request):
     """View function for the home page of the site."""
     num_workers = Worker.objects.count()
@@ -22,9 +22,16 @@ def index(request):
 
 
 class WorkerListView(generic.ListView):
-
+    """Generic class-based view for a list of workers."""
     model = Worker
     template_name = "manager/worker-list.html"
     context_object_name = "worker_list"
     paginate_by = 5
     queryset = Worker.objects.select_related()
+
+
+class WorkerDetailView(generic.DetailView):
+    """Generic class-based view for a worker's detail."""
+    model = Worker
+    template_name = "manager/worker-detail.html"
+    context_object_name = "worker"
