@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
@@ -37,7 +38,7 @@ class Task(models.Model):
         LOW = "Low", "Low"
 
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     deadline = models.DateField()
     is_completed = models.BooleanField(default=False)
     priority = models.CharField(

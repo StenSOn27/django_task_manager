@@ -6,6 +6,10 @@
         Create
       </a>
     </h1>
+    <form action="" method="get" class="form-inline">
+      {{ search_form|crispy }} 
+      <input class="btn btn-outline-secondary" type="submit" value="Search">
+    </form>
     {% if task_list %}
     <table class="table">
       <tr>
@@ -13,6 +17,7 @@
         <th>Name</th>
         <th>Description</th>
         <th>Deadline</th>
+        <th>Priority</th>
         <th>Is Completed</th>
       </tr>
     {% for task in task_list %}
@@ -21,7 +26,12 @@
         <td><a href="{{ task.get_absolute_url }}">{{ task.name }}</a></td>
         <td>{{ task.description }}</td>
         <td>{{ task.deadline }}</td>
-        <td>{{ task.is_completed }}</td>
+        <td>{{ task.priority }}</td>
+        <td>
+          <input type="checkbox"
+            {% if task.is_completed %}checked{% endif %}
+            disabled>
+        </td>
       </tr>
     {% endfor %}
     </table>

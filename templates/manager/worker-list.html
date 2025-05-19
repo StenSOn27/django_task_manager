@@ -4,6 +4,10 @@
     <h1>
       Workers List
     </h1>
+    <form action="" method="get" class="form-inline">
+      {{ search_form|crispy }} 
+      <input class="btn btn-outline-secondary" type="submit" value="Search">
+    </form>
     {% if worker_list %}
     <table class="table">
       <tr>

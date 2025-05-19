@@ -6,7 +6,9 @@
   <form action="" method="post" novalidate>
     {% csrf_token %}
     {{ form|crispy }}
-
+    {% if form.errors %}
+      <p>Your form contains errors. Please fix them and try again.</p>
+    {% endif %}
     <input type="submit" value="Submit" class="btn btn-primary">
   </form>
 {% endblock %}
