@@ -6,6 +6,7 @@ from .forms import WorkerCreateForm
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 @login_required
 def index(request):
     """View function for the home page of the site."""
@@ -26,6 +27,7 @@ def index(request):
 
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     """Generic class-based view for a list of workers."""
+
     model = Worker
     template_name = "manager/worker-list.html"
     context_object_name = "worker_list"
@@ -35,6 +37,7 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     """Generic class-based view for a worker's detail."""
+
     model = Worker
     template_name = "manager/worker-detail.html"
     context_object_name = "worker"
@@ -48,6 +51,7 @@ class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
     """Generic class-based view for a list of tasks."""
+
     model = Task
     template_name = "manager/task-list.html"
     context_object_name = "task_list"
@@ -57,6 +61,7 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     """Generic class-based view for a task's detail."""
+
     model = Task
     template_name = "manager/task-detail.html"
     context_object_name = "task"
@@ -64,6 +69,7 @@ class TaskDetailView(LoginRequiredMixin, generic.DetailView):
 
 class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     """Generic class-based view for creating a new task."""
+
     model = Task
     template_name = "manager/task-form.html"
     fields = ["name", "description", "deadline", "priority", "task_type", "assignees"]

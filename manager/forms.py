@@ -2,6 +2,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from .models import Worker
 
+
 class WorkerCreateForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Worker

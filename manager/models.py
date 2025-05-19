@@ -17,7 +17,7 @@ class Worker(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.position})"
-    
+
     def get_absolute_url(self):
         return reverse("manager:worker-detail", kwargs={"pk": self.pk})
 
@@ -50,6 +50,6 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         return reverse("manager:task-detail", kwargs={"pk": self.pk})
