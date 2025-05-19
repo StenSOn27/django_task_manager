@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+
+from manager.forms import (
+    TaskForm,
+    WorkerUsernameSearchForm,
+    TaskNameSearchForm,
+)
 from .models import Worker, Task
-from .forms import WorkerCreateForm
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -34,6 +39,25 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 5
     queryset = Worker.objects.select_related()
 
+    
+    def get_queryset(self):
+        queryset = Worker.objects.all()
+        form = WorkerUsernameSearchForm(self.request.GET)
+
+        if form.is_valid():
+            queryset = queryset.filter(
+                username__icontains=form.cleaned_data["username"]
+            )
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(WorkerListView, self).get_context_data(**kwargs)
+
+        username = self.request.GET.get("username", "")
+
+        context["search_form"] = WorkerUsernameSearchForm(initial={"username": username})
+        return context
+
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     """Generic class-based view for a worker's detail."""
@@ -41,11 +65,30 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     model = Worker
     template_name = "manager/worker-detail.html"
     context_object_name = "worker"
+    queryset = Worker.objects.select_related()
 
 
 class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
-    form_class = WorkerCreateForm
+    model = Worker
+    fields = ("username", "first_name", "last_name", "email")
     template_name = "manager/worker-form.html"
+    success_url = reverse_lazy("manager:worker-list")
+
+
+class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
+    """Generic class-based view for updating a worker's details."""
+
+    model = Worker
+    template_name = "manager/worker-form.html"
+    fields = ["username", "first_name", "last_name", "email"]
+    success_url = reverse_lazy("manager:worker-list")
+
+
+class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
+    """Generic class-based view for deleting a worker."""
+
+    model = Worker
+    template_name = "manager/worker_confirm_delete.html"
     success_url = reverse_lazy("manager:worker-list")
 
 
@@ -57,6 +100,25 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "task_list"
     paginate_by = 5
     queryset = Task.objects.prefetch_related()
+    ordering = ["-is_completed", "deadline"]
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        form = TaskNameSearchForm(self.request.GET)
+
+        if form.is_valid():
+            queryset = queryset.filter(
+                name__icontains=form.cleaned_data["name"]
+            )
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(TaskListView, self).get_context_data(**kwargs)
+
+        name = self.request.GET.get("name", "")
+
+        context["search_form"] = TaskNameSearchForm(initial={"name": name})
+        return context
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
@@ -71,6 +133,23 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     """Generic class-based view for creating a new task."""
 
     model = Task
+    form_class = TaskForm
     template_name = "manager/task-form.html"
-    fields = ["name", "description", "deadline", "priority", "task_type", "assignees"]
+    success_url = reverse_lazy("manager:task-list")
+
+
+class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
+    """Generic class-based view for updating a task's details."""
+
+    model = Task
+    form_class = TaskForm
+    template_name = "manager/task-form.html"
+    success_url = reverse_lazy("manager:task-list")
+
+
+class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
+    """Generic class-based view for deleting a task."""
+
+    model = Task
+    template_name = "manager/task_confirm_delete.html"
     success_url = reverse_lazy("manager:task-list")
