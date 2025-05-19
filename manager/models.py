@@ -13,11 +13,16 @@ class Position(models.Model):
 
 class Worker(AbstractUser):
     position = models.ForeignKey(
-        Position, on_delete=models.SET_NULL, null=True, related_name="workers"
+        "Position", on_delete=models.SET_NULL, null=True, related_name="workers"
     )
 
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
     def __str__(self):
-        return f"{self.username} ({self.position})"
+        return f"{self.email} ({self.position})"
 
     def get_absolute_url(self):
         return reverse("manager:worker-detail", kwargs={"pk": self.pk})

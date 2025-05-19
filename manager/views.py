@@ -1,18 +1,20 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 
 from manager.forms import (
+    LoginForm,
     TaskForm,
     WorkerUsernameSearchForm,
     TaskNameSearchForm,
+    WorkerCreationForm,
 )
 from .models import Worker, Task
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 
 
-@login_required
 def index(request):
     """View function for the home page of the site."""
     num_workers = Worker.objects.count()
@@ -30,7 +32,7 @@ def index(request):
     return render(request, "manager/index.html", context=context)
 
 
-class WorkerListView(LoginRequiredMixin, generic.ListView):
+class WorkerListView(generic.ListView):
     """Generic class-based view for a list of workers."""
 
     model = Worker
@@ -39,7 +41,6 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 5
     queryset = Worker.objects.select_related()
 
-    
     def get_queryset(self):
         queryset = Worker.objects.all()
         form = WorkerUsernameSearchForm(self.request.GET)
@@ -50,7 +51,7 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
             )
         return queryset
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, object_list=None, **kwargs):
         context = super(WorkerListView, self).get_context_data(**kwargs)
 
         username = self.request.GET.get("username", "")
@@ -59,7 +60,7 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
+class WorkerDetailView(generic.DetailView):
     """Generic class-based view for a worker's detail."""
 
     model = Worker
@@ -68,14 +69,14 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     queryset = Worker.objects.select_related()
 
 
-class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
+class WorkerCreateView(generic.CreateView):
     model = Worker
-    fields = ("username", "first_name", "last_name", "email")
+    form_class = WorkerCreationForm
     template_name = "manager/worker-form.html"
     success_url = reverse_lazy("manager:worker-list")
 
 
-class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
+class WorkerUpdateView(generic.UpdateView):
     """Generic class-based view for updating a worker's details."""
 
     model = Worker
@@ -84,7 +85,7 @@ class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
     success_url = reverse_lazy("manager:worker-list")
 
 
-class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
+class WorkerDeleteView(generic.DeleteView):
     """Generic class-based view for deleting a worker."""
 
     model = Worker
@@ -153,3 +154,7 @@ class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Task
     template_name = "manager/task_confirm_delete.html"
     success_url = reverse_lazy("manager:task-list")
+
+class CustomLoginView(LoginView):
+    authentication_form = LoginForm
+    template_name = "manager/login.html"

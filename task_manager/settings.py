@@ -29,7 +29,12 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/accounts/login/"
 # Application definition
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
