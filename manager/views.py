@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 
 from manager.forms import (
-    LoginForm,
     TaskForm,
     WorkerUsernameSearchForm,
     TaskNameSearchForm,
@@ -154,7 +153,3 @@ class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Task
     template_name = "manager/task_confirm_delete.html"
     success_url = reverse_lazy("manager:task-list")
-
-class CustomLoginView(LoginView):
-    authentication_form = LoginForm
-    template_name = "manager/login.html"

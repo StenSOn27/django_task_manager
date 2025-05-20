@@ -1,4 +1,4 @@
-import re
+from .managers import WorkerManager
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
@@ -12,14 +12,20 @@ class Position(models.Model):
 
 
 class Worker(AbstractUser):
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        blank=True,
+    )
+    email = models.EmailField(unique=True)
     position = models.ForeignKey(
         "Position", on_delete=models.SET_NULL, null=True, related_name="workers"
     )
 
-    email = models.EmailField(unique=True)
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    objects = WorkerManager()  # type: ignore
 
     def __str__(self):
         return f"{self.email} ({self.position})"

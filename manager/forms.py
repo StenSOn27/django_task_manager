@@ -74,6 +74,12 @@ class TaskNameSearchForm(forms.Form):
     )
 
 class WorkerCreationForm(UserCreationForm):
+    username = forms.CharField(
+        max_length=150,
+        required=False,
+        label="Username",
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )
     email = forms.EmailField(
         max_length=255,
         required=True,
@@ -83,7 +89,7 @@ class WorkerCreationForm(UserCreationForm):
 
     class Meta:
         model = Worker
-        fields = ("email", "password1", "password2")
+        fields = ("username", "email", "password1", "password2")
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -95,10 +101,3 @@ class WorkerCreationForm(UserCreationForm):
 
     def generate_random_username(self, length=10):
         return "user_" + ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
-
-
-class LoginForm(AuthenticationForm):
-    username = forms.EmailField(
-        label="Email",
-        widget=forms.EmailInput(attrs={"class": "form-control"}),
-    )
