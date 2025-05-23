@@ -42,18 +42,19 @@ class TaskType(models.Model):
 
 
 class Task(models.Model):
-    class Priority(models.TextChoices):
-        URGENT = "Urgent", "Urgent"
-        HIGH = "High", "High"
-        MEDIUM = "Medium", "Medium"
-        LOW = "Low", "Low"
+    priority_choices = (
+        ("URGENT", "Urgent"),
+        ("HIGH", "High"),
+        ("MEDIUM", "Medium"),
+        ("LOW", "Low"),
+    )
 
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     deadline = models.DateField()
     is_completed = models.BooleanField(default=False)
     priority = models.CharField(
-        max_length=10, choices=Priority.choices, default=Priority.MEDIUM
+        max_length=10, choices=priority_choices, default="MEDIUM"
     )
     task_type = models.ForeignKey(
         TaskType, on_delete=models.CASCADE, related_name="tasks"
