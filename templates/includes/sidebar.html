@@ -1,19 +1,68 @@
-{% if user.is_authenticated %}
-  <form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Logout</button>
-  </form>
-  <li class="btn btn-link">User: <a href="{{ user.get_absolute_url }}">{{ user.get_username }}</a></li>
-  {% else %}
-  <form action="{% url 'login' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Login</button>
-  </form>
-{% endif %}
-<br>
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <i class="logo-icon fas fa-bolt"></i>
+      <span>Task Manager</span>
+    </div>
+  </div>
 
-<ul class="sidebar-nav list-group">
-  <li class="list-group-item"><a href="{% url 'manager:index' %}">Home</a></li>
-  <li class="list-group-item"><a href="{% url 'manager:worker-list' %}">Workers</a></li>
-  <li class="list-group-item"><a href="{% url 'manager:task-list' %}">Tasks</a></li>
-</ul>
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a
+          href="{% url 'manager:index' %}"
+          class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <span>HomePage</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link {% if request.resolver_match.url_name == 'messages' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-envelope"></i>
+          <span>Messages</span>
+          {% if unread_messages %}
+          <span class="badge">{{ unread_messages }}</span>
+          {% endif %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="{% url 'manager:worker-list' %}"
+          class="nav-link {% if request.resolver_match.url_name == 'users' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-users"></i>
+          <span>Users List</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="{% url 'manager:task-list' %}"
+          class="nav-link {% if request.resolver_match.url_name == 'tasks' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-tasks"></i>
+          <span>Task List</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link {% if request.resolver_match.url_name == 'calendar' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-calendar"></i>
+          <span>Calendar</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="#" class="footer-link">
+      <i class="nav-icon fas fa-book"></i>
+      <span>Documentation</span>
+    </a>
+  </div>
+</aside>

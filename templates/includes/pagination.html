@@ -1,18 +1,72 @@
-{% load querry_transform %}
 {% if is_paginated %}
-  <ul class="pagination">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background-color: white; border-top: 1px solid #e9ecef; margin: 0 1.5rem; border-bottom-left-radius: 0.375rem; border-bottom-right-radius: 0.375rem; box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);" class="pagination-container">
+  <div style="color: #8898aa; font-size: 0.875rem; font-weight: 400;" class="pagination-info">
+    Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} out of {{ paginator.count }} entries
+  </div>
+
+  <nav style="display: flex; align-items: center; gap: 0.25rem;" class="pagination-controls" aria-label="Page navigation">
+    <!-- Previous Page -->
     {% if page_obj.has_previous %}
-      <li class="page-item">
-        <a href="?{% query_transform request page=page_obj.previous_page_number %}" class="page-link">prev</a>
-      </li>
+    <a
+      href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+      style="display: flex; align-items: center; justify-content: center; min-width: auto; height: 2rem; padding: 0 0.75rem; border: 1px solid #e9ecef; border-radius: 0.375rem; color: #525f7f; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease; background-color: white;"
+      class="page-link page-link-nav"
+      onmouseover="this.style.backgroundColor='#f5f7ff'; this.style.borderColor='#d1d9e6'; this.style.color='#172b4d'"
+      onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#e9ecef'; this.style.color='#525f7f'"
+      aria-label="Previous page"
+    >
+      Previous
+    </a>
+    {% else %}
+    <span style="display: flex; align-items: center; justify-content: center; min-width: auto; height: 2rem; padding: 0 0.75rem; border: 1px solid #e9ecef; border-radius: 0.375rem; color: #adb5bd; background-color: #f8f9fa; border-color: #e9ecef; cursor: not-allowed; pointer-events: none; font-size: 0.875rem; font-weight: 500;" class="page-link page-link-nav" aria-label="Previous page">
+      Previous
+    </span>
     {% endif %}
-    <li class="page-item active">
-      <span class="page-link">{{ page_obj.number }} of {{ paginator.num_pages }}</span>
-    </li>
+
+    <!-- Page Numbers -->
+    {% for num in paginator.page_range %} 
+    {% if page_obj.number == num %}
+    <span
+      style="display: flex; align-items: center; justify-content: center; min-width: 2rem; height: 2rem; padding: 0 0.5rem; border: 1px solid #5e72e4; border-radius: 0.375rem; color: white; text-decoration: none; font-size: 0.875rem; font-weight: 600; background-color: #5e72e4;"
+      class="page-link"
+      aria-current="page"
+      aria-label="Current page {{ num }}"
+    >
+      {{ num }}
+    </span>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+    <a
+      href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+      style="display: flex; align-items: center; justify-content: center; min-width: 2rem; height: 2rem; padding: 0 0.5rem; border: 1px solid #e9ecef; border-radius: 0.375rem; color: #525f7f; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease; background-color: white;"
+      class="page-link"
+      onmouseover="this.style.backgroundColor='#f5f7ff'; this.style.borderColor='#d1d9e6'; this.style.color='#172b4d'"
+      onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#e9ecef'; this.style.color='#525f7f'"
+      aria-label="Go to page {{ num }}"
+    >
+      {{ num }}
+    </a>
+    {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+    <span style="display: flex; align-items: center; justify-content: center; min-width: 2rem; height: 2rem; color: #8898aa; font-size: 0.875rem;" aria-hidden="true">...</span>
+    {% endif %} 
+    {% endfor %}
+
+    <!-- Next Page -->
     {% if page_obj.has_next %}
-      <li class="page-item">
-        <a href="?{% query_transform request page=page_obj.next_page_number %}" class="page-link">next</a>
-      </li>
+    <a
+      href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+      style="display: flex; align-items: center; justify-content: center; min-width: auto; height: 2rem; padding: 0 0.75rem; border: 1px solid #e9ecef; border-radius: 0.375rem; color: #525f7f; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease; background-color: white;"
+      class="page-link page-link-nav"
+      onmouseover="this.style.backgroundColor='#f5f7ff'; this.style.borderColor='#d1d9e6'; this.style.color='#172b4d'"
+      onmouseout="this.style.backgroundColor='white'; this.style.borderColor='#e9ecef'; this.style.color='#525f7f'"
+      aria-label="Next page"
+    >
+      Next
+    </a>
+    {% else %}
+    <span style="display: flex; align-items: center; justify-content: center; min-width: auto; height: 2rem; padding: 0 0.75rem; border: 1px solid #e9ecef; border-radius: 0.375rem; color: #adb5bd; background-color: #f8f9fa; border-color: #e9ecef; cursor: not-allowed; pointer-events: none; font-size: 0.875rem; font-weight: 500;" class="page-link page-link-nav" aria-label="Next page">
+      Next
+    </span>
     {% endif %}
-  </ul>
+  </nav>
+</div>
 {% endif %}

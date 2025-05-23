@@ -1,4 +1,5 @@
-﻿from django.urls import path
+﻿import profile
+from django.urls import path
 
 from .views import (
     index,
@@ -12,6 +13,7 @@ from .views import (
     TaskDeleteView,
     WorkerUpdateView,
     WorkerDeleteView,
+    toggle_task_status,
 )
 
 urlpatterns = [
@@ -26,6 +28,7 @@ urlpatterns = [
     path("tasks/<int:pk>/delete/", TaskDeleteView.as_view(), name="task-delete"),
     path("workers/<int:pk>/update/", WorkerUpdateView.as_view(), name="worker-update"),
     path("workers/<int:pk>/delete/", WorkerDeleteView.as_view(), name="worker-delete"),
+    path("tasks/<int:pk>/toggle-status/", toggle_task_status, name="toggle-task-status"),
 ]
 
 app_name = "manager"

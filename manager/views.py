@@ -1,5 +1,7 @@
-from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
+import json
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 
 from manager.forms import (
@@ -12,6 +14,7 @@ from .models import Worker, Task
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.views.decorators.http import require_POST
 
 
 def index(request):
@@ -153,3 +156,19 @@ class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Task
     template_name = "manager/task_confirm_delete.html"
     success_url = reverse_lazy("manager:task-list")
+
+@require_POST
+def toggle_task_status(request, pk):
+    try:
+        task = Task.objects.get(pk=pk)
+        task.is_completed = not task.is_completed
+        task.save()
+        return JsonResponse({
+            "status": "success",
+            "is_completed": task.is_completed,
+        })
+    except Task.DoesNotExist:
+        return JsonResponse({
+            "status": "error",
+            "message": "Task not found"
+        }, status=404)

@@ -1,17 +1,96 @@
-﻿{% extends "base.html" %}
-
+﻿{% extends 'base.html' %}
+{% block title %}Home Page{% endblock %}
 {% block content %}
-    <h1>Task Manager</h1>
-    <p>Welcome to Best Task Manager!</p>
-    <h2>Dynamic content</h2>
-    <p>The Task Manager has the following record counts:</p>
-    <ul>
-        <li><strong>Workers:</strong> {{ num_workers }}</li>
-        <li><strong>Tasks:</strong> {{ num_tasks }}</li>
-    </ul>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <a href="{% url 'manager:task-create' %}" class="btn btn-primary">
+      <span class="btn-icon">+</span>
+      <span class="btn-text">New Task</span>
+    </a>
+  </div>
 
-    <p>You have visited this page
-        {{ num_visits }} time{{ num_visits|pluralize }}.
-    </p>
+  <div class="sales-card">
+    <div class="card-header">
+      <h2 class="card-title">Sales Value</h2>
+      <div class="time-filters">
+        <button class="filter-btn active">Month</button>
+        <button class="filter-btn">Week</button>
+      </div>
+    </div>
 
+    <div class="card-body">
+      <div class="sales-value">
+        <h3 class="value">${{ sales_value }}</h3>
+        <div class="change">
+          <span class="label">Yesterday</span>
+          <span
+            class="percentage {% if percentage_change > 0 %}positive{% else %}negative{% endif %}"
+          >
+            {{ percentage_change }}%
+          </span>
+        </div>
+      </div>
+
+      <div class="sales-chart">
+        <!-- Chart would be rendered here with JavaScript in a real app -->
+        <div class="chart-placeholder">
+          <div class="chart-line"></div>
+          <div class="chart-labels">
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+            <span>Sun</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon customers-icon">👥</div>
+      <div class="metric-content">
+        <h3 class="metric-title">Customers</h3>
+        <div class="metric-value">{{ customers_count }}k</div>
+        <div class="metric-period">{{ period_start }} - {{ period_end }}</div>
+        <div
+          class="metric-change {% if customers_change > 0 %}positive{% else %}negative{% endif %}"
+        >
+          {{ customers_change }}% Since last month
+        </div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon revenue-icon">💰</div>
+      <div class="metric-content">
+        <h3 class="metric-title">Revenue</h3>
+        <div class="metric-value">${{ revenue }}</div>
+        <div class="metric-period">{{ period_start }} - {{ period_end }}</div>
+        <div
+          class="metric-change {% if revenue_change > 0 %}positive{% else %}negative{% endif %}"
+        >
+          {{ revenue_change }}% Since last month
+        </div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon bounce-icon">📊</div>
+      <div class="metric-content">
+        <h3 class="metric-title">Bounce Rate</h3>
+        <div class="metric-value">{{ bounce_rate }}%</div>
+        <div class="metric-period">{{ period_start }} - {{ period_end }}</div>
+        <div
+          class="metric-change {% if bounce_rate_change < 0 %}positive{% else %}negative{% endif %}"
+        >
+          {{ bounce_rate_change }}% Since last month
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
