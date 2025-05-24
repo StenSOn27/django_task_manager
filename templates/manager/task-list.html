@@ -106,7 +106,6 @@
       method: 'POST',
       headers: {
         'X-CSRFToken': getCookie('csrftoken'),
-        'Content-Type': 'application/json',
       }
     })
     .then(response => {
@@ -138,7 +137,7 @@
       }
     })
     .catch(error => {
-      console.error("Помилка оновлення статусу:", error);
+      console.error("Updating task status:", error);
     });
   }
 </script>
