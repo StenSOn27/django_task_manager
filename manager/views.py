@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-
+from django.contrib.auth import get_user_model
 from manager.forms import (
     TaskForm,
     WorkerUsernameSearchForm,
@@ -132,6 +132,8 @@ class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     context_object_name = "task"
 
 
+User = get_user_model()
+
 class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     """Generic class-based view for creating a new task."""
 
@@ -139,6 +141,11 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = TaskForm
     template_name = "manager/task-form.html"
     success_url = reverse_lazy("manager:task-list")
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskCreateView, self).get_context_data(**kwargs)
+        context['users'] = User.objects.filter(email__isnull=False).exclude(email='').order_by('email')
+        return context
 
 
 class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):

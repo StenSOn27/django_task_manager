@@ -136,3 +136,86 @@ body {
 #dropdown-toggle:checked ~ .dropdown-menu {
   display: block;
 }
+
+/* Search Form */
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  max-width: 400px;
+  margin-left: 20px;
+}
+
+.search-form input[type="text"],
+.search-form input[type="search"] {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.search-form input[type="text"]:focus,
+.search-form input[type="search"]:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  background-color: #e4e4e4e7;
+  color: black;
+  font-weight: 1000;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #414141be;
+  color: white;
+}
+
+textarea {
+    resize: none !important;
+    font-family: inherit !important;
+    height: 320px !important;
+}
+
+select {
+    cursor: pointer !important;
+}
+
+input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    accent-color: #3b82f6 !important;
+    margin: 0 !important;
+}
+
+/* Assignees styling */
+label:has(input[type="checkbox"]):hover {
+    background-color: #f9fafb !important;
+}
+
+/* Remove default form styling */
+.form-control {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.form-select {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Custom checkbox styling for assignees */
+input[type="checkbox"] + div {
+    margin-left: 0 !important;
+}

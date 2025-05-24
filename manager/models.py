@@ -28,7 +28,7 @@ class Worker(AbstractUser):
     objects = WorkerManager()  # type: ignore
 
     def __str__(self):
-        return f"{self.email} ({self.position})"
+        return f"{self.username}"
 
     def get_absolute_url(self):
         return reverse("manager:worker-detail", kwargs={"pk": self.pk})
