@@ -156,6 +156,11 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "manager/task-form.html"
     success_url = reverse_lazy("manager:task-list")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_object'] = True  # тут об'єкт існує — редагування
+        return context
+
 
 class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     """Generic class-based view for deleting a task."""
