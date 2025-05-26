@@ -62,10 +62,6 @@
                             background-color: #fb6340; color: white;
                         {% elif task.priority|lower == 'low' %}
                             background-color: #ffd600; color: #172b4d;
-                        {% elif task.priority|lower == 'critical' %}
-                            background-color: #7c2d12; color: white;
-                        {% else %}
-                            background-color: #6b7280; color: white;
                         {% endif %}">
                         {{ task.priority|upper }}
                     </div>

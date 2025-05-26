@@ -1,0 +1,216 @@
+﻿{% extends "base.html" %}
+{% block content %}
+    <div style="background-color: #f8fafc; min-height: 100vh;">
+        <!-- Main Content -->
+        <div style="padding: 3rem; max-width: 1600px; margin: 0 auto;">
+            <div style="display: flex; gap: 3rem; align-items: flex-start;">
+                
+                <!-- Left Column - Edit Form -->
+                <div style="flex: 2; background: white; border-radius: 16px; padding: 3rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    
+                    <h2 style="color: #1e293b; font-weight: 600; font-size: 2rem; margin-bottom: 3rem;">Edit information</h2>
+                    
+                    <!-- Display form errors if any -->
+                    {% if form.non_field_errors %}
+                        <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 1rem; margin-bottom: 2rem;">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-exclamation-triangle" style="color: #dc2626; margin-right: 0.5rem;"></i>
+                                <span style="color: #dc2626; font-weight: 500;">Please correct the errors below:</span>
+                            </div>
+                            <ul style="margin: 0.5rem 0 0 1.5rem; color: #dc2626;">
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'manager:worker-update' pk=worker.id %}">
+                        {% csrf_token %}
+                        
+                        <!-- Personal Details -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+                            <div>
+                                <label for="first_name" style="color: #374151; font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; display: block;">First Name</label>
+                                <input type="text" 
+                                       id="first_name" 
+                                       name="first_name" 
+                                       value="{{ form.first_name.value|default:worker.first_name }}"
+                                       style="width: 100%; background: #f8fafc; border: 2px solid {% if form.first_name.errors %}#dc2626{% else %}#e2e8f0{% endif %}; border-radius: 12px; padding: 1rem 1.25rem; color: #1e293b; font-weight: 500; font-size: 1rem; box-sizing: border-box;"
+                                       required>
+                                {% if form.first_name.errors %}
+                                    <div style="margin-top: 0.5rem;">
+                                        {% for error in form.first_name.errors %}
+                                            <p style="color: #dc2626; font-size: 0.875rem; margin: 0.25rem 0;">
+                                                <i class="fas fa-exclamation-circle" style="margin-right: 0.25rem;"></i>{{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="last_name" style="color: #374151; font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; display: block;">Last Name</label>
+                                <input type="text" 
+                                       id="last_name" 
+                                       name="last_name" 
+                                       value="{{ form.last_name.value|default:worker.last_name }}"
+                                       style="width: 100%; background: #f8fafc; border: 2px solid {% if form.last_name.errors %}#dc2626{% else %}#e2e8f0{% endif %}; border-radius: 12px; padding: 1rem 1.25rem; color: #1e293b; font-weight: 500; font-size: 1rem; box-sizing: border-box;"
+                                       required>
+                                {% if form.last_name.errors %}
+                                    <div style="margin-top: 0.5rem;">
+                                        {% for error in form.last_name.errors %}
+                                            <p style="color: #dc2626; font-size: 0.875rem; margin: 0.25rem 0;">
+                                                <i class="fas fa-exclamation-circle" style="margin-right: 0.25rem;"></i>{{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+                            <div>
+                                <label for="position" style="color: #374151; font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; display: block;">Position</label>
+                                <select id="position" 
+                                        name="position" 
+                                        style="width: 100%; background: #f8fafc; border: 2px solid {% if form.position.errors %}#dc2626{% else %}#e2e8f0{% endif %}; border-radius: 12px; padding: 1rem 1.25rem; color: #1e293b; font-weight: 500; font-size: 1rem; box-sizing: border-box; cursor: pointer;">
+                                    <option value="" {% if not worker.position and not form.position.value %}selected{% endif %}>Select Position</option>
+                                    {% for position in positions %}
+                                        <option value="{{ position.id }}" 
+                                                {% if form.position.value %}
+                                                    {% if form.position.value|stringformat:"s" == position.id|stringformat:"s" %}selected{% endif %}
+                                                {% elif worker.position.id == position.id %}
+                                                    selected
+                                                {% endif %}>
+                                            {{ position.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.position.errors %}
+                                    <div style="margin-top: 0.5rem;">
+                                        {% for error in form.position.errors %}
+                                            <p style="color: #dc2626; font-size: 0.875rem; margin: 0.25rem 0;">
+                                                <i class="fas fa-exclamation-circle" style="margin-right: 0.25rem;"></i>{{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="username" style="color: #374151; font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; display: block;">Username</label>
+                                <input type="text" 
+                                       id="username" 
+                                       name="username" 
+                                       value="{{ form.username.value|default:worker.username }}"
+                                       style="width: 100%; background: #f8fafc; border: 2px solid {% if form.username.errors %}#dc2626{% else %}#e2e8f0{% endif %}; border-radius: 12px; padding: 1rem 1.25rem; color: #1e293b; font-weight: 500; font-size: 1rem; box-sizing: border-box;"
+                                       required>
+                                {% if form.username.errors %}
+                                    <div style="margin-top: 0.5rem;">
+                                        {% for error in form.username.errors %}
+                                            <p style="color: #dc2626; font-size: 0.875rem; margin: 0.25rem 0;">
+                                                <i class="fas fa-exclamation-circle" style="margin-right: 0.25rem;"></i>{{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 3rem;">
+                            <div>
+                                <label for="email" style="color: #374151; font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; display: block;">Email</label>
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       value="{{ form.email.value|default:worker.email }}"
+                                       style="width: 100%; background: #f8fafc; border: 2px solid {% if form.email.errors %}#dc2626{% else %}#e2e8f0{% endif %}; border-radius: 12px; padding: 1rem 1.25rem; color: #1e293b; font-weight: 500; font-size: 1rem; box-sizing: border-box;"
+                                       required>
+                                {% if form.email.errors %}
+                                    <div style="margin-top: 0.5rem;">
+                                        {% for error in form.email.errors %}
+                                            <p style="color: #dc2626; font-size: 0.875rem; margin: 0.25rem 0;">
+                                                <i class="fas fa-exclamation-circle" style="margin-right: 0.25rem;"></i>{{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 1.5rem; margin-top: 3rem;">
+                            <button type="submit" 
+                                    style="background: #16a34a; color: white; padding: 1rem 2.5rem; border-radius: 12px; border: none; font-weight: 600; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);">
+                                <i class="fas fa-save" style="margin-right: 0.75rem; font-size: 1.1rem;"></i>
+                                Save Changes
+                            </button>
+                            <a href="{% url 'manager:worker-detail' pk=worker.id %}" 
+                               style="background: #6b7280; color: white; padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(107, 114, 128, 0.2);">
+                                <i class="fas fa-times" style="margin-right: 0.75rem; font-size: 1.1rem;"></i>
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Column - Profile Card -->
+                <div style="flex: 1; min-width: 400px;">
+                    
+                    <!-- Profile Card -->
+                    <div style="background: white; border-radius: 16px; padding: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 2rem;">
+                        
+                        <!-- Profile Header with Background -->
+                        <div style="background: linear-gradient(135deg,rgb(243, 243, 243) 0%,rgb(243, 240, 240) 100%); height: 160px; position: relative;">
+                            <div style="position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);">
+                                <div style="width: 100px; height: 100px; border-radius: 50%; background: #16a34a; border: 5px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15);">
+                                    <span style="color: white; font-weight: 700; font-size: 2rem;">{{ worker.username|slice:":2"|upper }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Info -->
+                        <div style="padding: 4rem 2.5rem 2.5rem; text-align: center;">
+                            <h3 style="color: #1e293b; font-weight: 700; font-size: 1.75rem; margin: 0 0 0.75rem 0;">{{ worker.username }}</h3>
+                            <p style="color: #64748b; font-weight: 500; margin: 0; font-size: 1.1rem;">{{ worker.email }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Additional Info Card -->
+                    <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <h4 style="color: #1e293b; font-weight: 600; font-size: 1.25rem; margin-bottom: 1.5rem;">Current Information</h4>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <div style="padding: 1rem; background: #f8fafc; border-radius: 10px; border-left: 4px solid #3b82f6;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #64748b; font-weight: 500; font-size: 0.95rem;">Full Name</span>
+                                    <span style="color: #1e293b; font-weight: 600; font-size: 1rem;">{{ worker.first_name }} {{ worker.last_name }}</span>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 1rem; background: #f8fafc; border-radius: 10px; border-left: 4px solid #10b981;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #64748b; font-weight: 500; font-size: 0.95rem;">Position</span>
+                                    <span style="color: #1e293b; font-weight: 600; font-size: 1rem;">{{ worker.position|default:"Not specified" }}</span>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 1rem; background: #f8fafc; border-radius: 10px; border-left: 4px solid #f59e0b;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #64748b; font-weight: 500; font-size: 0.95rem;">Total Tasks</span>
+                                    <span style="color: #1e293b; font-weight: 600; font-size: 1rem;">{{ worker.tasks.all|length }}</span>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 1rem; background: #f8fafc; border-radius: 10px; border-left: 4px solid #ef4444;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #64748b; font-weight: 500; font-size: 0.95rem;">Member Since</span>
+                                    <span style="color: #1e293b; font-weight: 600; font-size: 1rem;">{{ worker.date_joined|date:"M Y"|default:"Recently" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

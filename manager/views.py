@@ -1,3 +1,4 @@
+from dis import Positions
 import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -53,12 +54,24 @@ class WorkerListView(generic.ListView):
             )
         return queryset
 
-    def get_context_data(self, object_list=None, **kwargs):
-        context = super(WorkerListView, self).get_context_data(**kwargs)
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         username = self.request.GET.get("username", "")
-
         context["search_form"] = WorkerUsernameSearchForm(initial={"username": username})
+
+        # Список кольорів для аватарів
+        colors = [
+            "#f97316", "#84cc16", "#06b6d4", "#ef4444",
+            "#8b5cf6", "#f59e0b", "#10b981", "#3b82f6"
+        ]
+
+        # Присвоюємо кожному робітнику ініціали та колір
+        workers = context.get("worker_list")
+        if workers:
+            for idx, worker in enumerate(workers):
+                worker.initials = worker.username[:2].upper()
+                worker.color = colors[idx % len(colors)]
+
         return context
 
 
@@ -70,6 +83,15 @@ class WorkerDetailView(generic.DetailView):
     context_object_name = "worker"
     queryset = Worker.objects.select_related()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        worker = self.object  # type: ignore
+
+        context["total_tasks_count"] = worker.tasks.count()
+        context["completed_tasks_count"] = worker.tasks.filter(is_completed=True).count()
+        context["in_progress_tasks_count"] = worker.tasks.filter(is_completed=False).count()
+
+        return context
 
 class WorkerCreateView(generic.CreateView):
     model = Worker
@@ -82,9 +104,17 @@ class WorkerUpdateView(generic.UpdateView):
     """Generic class-based view for updating a worker's details."""
 
     model = Worker
-    template_name = "manager/worker-form.html"
-    fields = ["username", "first_name", "last_name", "email"]
+    template_name = "manager/worker-update.html"
+    fields = ["username", "first_name", "last_name", "email", "position"]
     success_url = reverse_lazy("manager:worker-list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from manager.models import Position  # імпортуй, якщо потрібно
+        context["positions"] = Position.objects.all()
+        context["is_object"] = True
+
+        return context
 
 
 class WorkerDeleteView(generic.DeleteView):

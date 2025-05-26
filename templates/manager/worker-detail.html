@@ -1,39 +1,197 @@
-﻿{% extends "base.html" %} {% block content %}
-<h1>
-  Username: {{ worker.username }}
-  <a
-    href="{% url 'manager:worker-delete' pk=worker.id %}"
-    class="btn btn-danger link-to-page"
-  >
-    Delete
-  </a>
+﻿{% extends "base.html" %}
+{% block content %}
+    <div style="background-color: #f8fafc; min-height: 100vh;">
+        <!-- Main Content -->
+        <div style="padding: 2rem; max-width: 1400px; margin: 0 auto;">
+            <div style="display: flex; gap: 2rem; align-items: flex-start;">
+                
+                <!-- Left Column - Worker Information Form -->
+                <div style="flex: 2; background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    
+                    <h2 style="color: #1e293b; font-weight: 600; font-size: 1.5rem; margin-bottom: 2rem;">General information</h2>
+                    
+                    <!-- Personal Details -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div>
+                            <label style="color: #374151; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem; display: block;">First Name</label>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; color: #1e293b; font-weight: 500;">
+                                {{ worker.first_name }}
+                            </div>
+                        </div>
+                        <div>
+                            <label style="color: #374151; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem; display: block;">Last Name</label>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; color: #1e293b; font-weight: 500;">
+                                {{ worker.last_name }}
+                            </div>
+                        </div>
+                    </div>
 
-  <a
-    href="{% url 'manager:worker-update' pk=worker.id %}"
-    class="btn btn-secondary link-to-page"
-  >
-    Edit
-  </a>
-</h1>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div>
+                            <label style="color: #374151; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem; display: block;">Position</label>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; color: #1e293b; font-weight: 500;">
+                                {{ worker.position }}
+                            </div>
+                        </div>
+                        <div>
+                            <label style="color: #374151; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem; display: block;">Username</label>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; color: #1e293b; font-weight: 500;">
+                                {{ worker.username }}
+                            </div>
+                        </div>
+                    </div>
 
-<p><strong>First name:</strong> {{ worker.first_name }}</p>
-<p><strong>Last name:</strong> {{ worker.last_name }}</p>
-<p><strong>Position:</strong> {{ worker.position }}</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div>
+                            <label style="color: #374151; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem; display: block;">Email</label>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem; color: #1e293b; font-weight: 500;">
+                                {{ worker.email }}
+                            </div>
+                        </div>
+                        <div>
+                            <label style="color: #374151; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem; display: block;">Status</label>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem;">
+                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                                    Active
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="ml-3">
-  <h4>Tasks</h4>
+                    <!-- Tasks Section -->
+                    <h3 style="color: #1e293b; font-weight: 600; font-size: 1.25rem; margin-bottom: 1.5rem; margin-top: 2rem;">Assigned Tasks</h3>
+                    
+                    <div style="max-height: 400px; overflow-y: auto; display: grid; gap: 0.75rem; padding-right: 0.5rem;">
+                        {% for task in worker.tasks.all %}
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                <h4 style="color: #1e293b; font-weight: 600; margin: 0; flex: 1; font-size: 1rem;">{{ task.name }}</h4>
+                                <div style="display: flex; gap: 0.5rem; margin-left: 1rem;">
+                                    <!-- Priority Badge -->
+                                    <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 12px; font-weight: 500;
+                                        {% if task.priority|lower == 'urgent' %}
+                                            background-color: #dc2626; color: white;
+                                        {% elif task.priority|lower == 'high' %}
+                                            background-color: #f5365c; color: white;
+                                        {% elif task.priority|lower == 'medium' %}
+                                            background-color: #fb6340; color: white;
+                                        {% elif task.priority|lower == 'low' %}
+                                            background-color: #ffd600; color: #172b4d;
+                                        {% endif %}">
+                                        {{ task.priority }}
+                                    </span>
+                                    
+                                    <!-- Status Badge -->
+                                    {% if task.is_completed %}
+                                        <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 12px; font-weight: 500; background: #16a34a; color: white;">
+                                            Completed
+                                        </span>
+                                    {% else %}
+                                        <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 12px; font-weight: 500; background: #f59e0b; color: white;">
+                                            In Progress
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p style="color: #64748b; margin-bottom: 0.75rem; line-height: 1.4; font-size: 0.875rem;">{{ task.description }}</p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; font-size: 0.8rem;">
+                                <div>
+                                    <span style="color: #64748b; font-weight: 500;">Deadline:</span>
+                                    <div style="color: #1e293b; font-weight: 500;">{{ task.deadline|date:"M d, Y" }}</div>
+                                </div>
+                                <div>
+                                    <span style="color: #64748b; font-weight: 500;">Type:</span>
+                                    <div style="color: #1e293b; font-weight: 500;">{{ task.task_type }}</div>
+                                </div>
+                                <div>
+                                    <span style="color: #64748b; font-weight: 500;">Assignees:</span>
+                                    <div style="color: #1e293b; font-weight: 500;">
+                                        {% if task.assignees.all %}
+                                            {{ task.assignees.all|join:", " }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div style="text-align: center; padding: 2rem; color: #64748b;">
+                            <i class="fas fa-clipboard-list" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <p style="margin: 0;">No tasks assigned</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
 
-  {% for task in worker.tasks.all %}
-  <hr />
-  <p><strong>Task Name:</strong> {{ task.name }}</p>
-  <p><strong>Description:</strong> {{ task.description }}</p>
-  <p><strong>Deadline:</strong> {{ task.deadline }}</p>
-  <p><strong>Is Completed:</strong> {{ task.is_completed }}</p>
-  <p><strong>Priority:</strong> {{ task.priority }}</p>
-  <p><strong>Task Type:</strong> {{ task.task_type }}</p>
-  <p><strong>Assignees:</strong> {{ task.assignees.all|join:", " }}</p>
-  {% empty %}
-  <p>No tasks!</p>
-  {% endfor %}
-</div>
+                <!-- Right Column - Profile Card -->
+                <div style="flex: 1; min-width: 300px;">
+                    
+                    <!-- Profile Card -->
+                    <div style="background: white; border-radius: 12px; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 2rem;">
+                        
+                        <!-- Profile Header with Background -->
+                        <div style="background: linear-gradient(135deg,rgb(243, 240, 242) 0%,rgb(243, 240, 240) 100%); height: 120px; position: relative;">
+                            <div style="position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);">
+                                <div style="width: 80px; height: 80px; border-radius: 50%; background:rgb(20, 185, 94); border: 4px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                                    <span style="color: white; font-weight: 700; font-size: 1.5rem;">{{ worker.username|slice:":2"|upper }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Info -->
+                        <div style="padding: 3rem 2rem 2rem; text-align: center;">
+                            <h3 style="color: #1e293b; font-weight: 700; font-size: 1.5rem; margin: 0 0 0.5rem 0;">{{ worker.username }}</h3>
+                            <p style="color: #64748b; font-weight: 500; margin: 0 0 1.5rem 0; font-size: 0.9rem;">{{ worker.email }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Task Statistics -->
+                    <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                        <h4 style="color: #1e293b; font-weight: 600; margin-bottom: 1.5rem;">Task Statistics</h4>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Total Tasks -->
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #64748b; font-weight: 500;">Total Tasks</span>
+                                <span style="color: #1e293b; font-weight: 600; font-size: 1.1rem;">
+                                    {{ total_tasks_count }}
+                                </span>
+                            </div>
+
+                            <!-- Completed -->
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #64748b; font-weight: 500;">Completed</span>
+                                <span style="color: #16a34a; font-weight: 600; font-size: 1.1rem;">
+                                    {{ completed_tasks_count }}
+                                </span>
+                            </div>
+
+                            <!-- In Progress -->
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #64748b; font-weight: 500;">In Progress</span>
+                                <span style="color: #f59e0b; font-weight: 600; font-size: 1.1rem;">
+                                    {{ in_progress_tasks_count }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <a href="{% url 'manager:worker-update' pk=worker.id %}" 
+                           style="background: #1e293b; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-edit" style="margin-right: 0.5rem;"></i>
+                            Edit Worker
+                        </a>
+                        <a href="{% url 'manager:worker-delete' pk=worker.id %}" 
+                           style="background: #ef4444; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-trash" style="margin-right: 0.5rem;"></i>
+                            Delete Worker
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
