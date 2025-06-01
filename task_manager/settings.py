@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from re import A
-
+from manager.log_formatter import CustomJsonFormatter
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,6 +31,43 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/accounts/login/"
 # Application definition
+
+LOGGING = {
+    "version": 1,  # the dictConfig format version
+    "disable_existing_loggers": False,  # retain the default loggers
+    
+    "formatters": {
+        "main_formatter": {
+            "format": "{name} {levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+
+        "json_formatter": {
+            "()": CustomJsonFormatter,
+        }
+    },
+
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "info.log",
+            "formatter": "json_formatter",
+        },
+
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "main_formatter",
+        }
+    },
+
+    "loggers": {
+        "manager.views": {
+            "level": "INFO",
+            "handlers": ["file", "console"],
+        },
+    },
+
+}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

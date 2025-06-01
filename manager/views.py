@@ -1,5 +1,6 @@
 from dis import Positions
 import json
+import logging
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
@@ -18,7 +19,10 @@ from django.contrib.auth.views import LoginView
 from django.views.decorators.http import require_POST
 
 
+logger = logging.getLogger(__name__)
+
 def index(request):
+    logger.info("main page")
     """View function for the home page of the site."""
     num_workers = Worker.objects.count()
     num_tasks = Task.objects.count()
@@ -59,19 +63,6 @@ class WorkerListView(generic.ListView):
         username = self.request.GET.get("username", "")
         context["search_form"] = WorkerUsernameSearchForm(initial={"username": username})
 
-        # Список кольорів для аватарів
-        colors = [
-            "#f97316", "#84cc16", "#06b6d4", "#ef4444",
-            "#8b5cf6", "#f59e0b", "#10b981", "#3b82f6"
-        ]
-
-        # Присвоюємо кожному робітнику ініціали та колір
-        workers = context.get("worker_list")
-        if workers:
-            for idx, worker in enumerate(workers):
-                worker.initials = worker.username[:2].upper()
-                worker.color = colors[idx % len(colors)]
-
         return context
 
 
@@ -110,7 +101,7 @@ class WorkerUpdateView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        from manager.models import Position  # імпортуй, якщо потрібно
+        from manager.models import Position
         context["positions"] = Position.objects.all()
         context["is_object"] = True
 
