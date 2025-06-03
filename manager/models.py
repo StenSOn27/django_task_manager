@@ -66,3 +66,19 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse("manager:task-detail", kwargs={"pk": self.pk})
+
+
+class CompletedTask(Task):
+    class Meta:
+        proxy = True
+        ordering = ["-deadline"]
+
+    def is_recently_completed(self):
+        from django.utils.timezone import now
+        return self.is_completed and (now().date() - self.deadline).days <= 7
+    
+
+class PendingTask(Task):
+    class Meta:
+        proxy = True
+        ordering = ["deadline"]

@@ -1,19 +1,10 @@
-﻿<header
-  class="top-nav"
-  style="
-    background-color: #f7f9fc;
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  "
->
+﻿{% load static %}
+<link rel="stylesheet" href="{% static 'css/top_navigation.css' %}">
+<header class="top-nav">
   <!-- Меню та пошук -->
-  <div style="display: flex; align-items: center; gap: 10px">
+  <div class="nav-left-section">
     <!-- Бургер-меню -->
-    <button style="background: none; border: none; cursor: pointer">
+    <button class="burger-menu-btn">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="4" x2="20" y1="12" y2="12"></line>
@@ -23,22 +14,11 @@
     </button>
 
     <!-- Пошук -->
-    <div style="position: relative">
-      <form action="#" method="get" style="display: flex; align-items: center">
-        <input type="search" placeholder="Search" aria-label="Search" style="
-            padding: 8px 12px 8px 32px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: white;
-          " />
+    <div class="search-wrapper">
+      <form action="#" method="get" class="search-form">
+        <input type="search" placeholder="Search" aria-label="Search" class="search-input" />
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-          ">
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
           <circle cx="11" cy="11" r="8"></circle>
           <path d="m21 21-4.3-4.3"></path>
         </svg>
@@ -47,55 +27,34 @@
   </div>
 
   <!-- Сповіщення та користувач -->
-  <div style="display: flex; align-items: center; gap: 20px">
+  <div class="nav-right-section">
     <!-- Сповіщення з дропдауном -->
-    <div class="notifications-dropdown" style="position: relative;">
-      <input type="checkbox" id="notifications-toggle" hidden>
-      <label for="notifications-toggle" style="cursor: pointer; position: relative; display: flex; align-items: center;">
+    <div class="notifications-dropdown">
+      <input type="checkbox" id="notifications-toggle" class="notifications-toggle" hidden>
+      <label for="notifications-toggle" class="notifications-label">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
           <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
         </svg>
-        <span style="
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: red;
-            color: white;
-            font-size: 10px;
-            padding: 2px 5px;
-            border-radius: 999px;
-          ">3</span>
+        <span class="notification-badge">3</span>
       </label>
 
-      <div class="dropdown-menu" style="
-          position: absolute;
-          right: 0;
-          top: 30px;
-          width: 250px;
-          background: white;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
-          padding: 10px 0;
-          display: none;
-          z-index: 100;
-        ">
-        <a href="#" style="display: block; padding: 8px 16px; text-decoration: none; color: black;">Notification 1</a>
-        <a href="#" style="display: block; padding: 8px 16px; text-decoration: none; color: black;">Notification 2</a>
-        <a href="#" style="display: block; padding: 8px 16px; text-decoration: none; color: black;">Notification 3</a>
+      <div class="dropdown-menu">
+        <a href="#" class="dropdown-item">Notification 1</a>
+        <a href="#" class="dropdown-item">Notification 2</a>
+        <a href="#" class="dropdown-item">Notification 3</a>
       </div>
     </div>
 
     <!-- Профіль і дропдаун -->
-    <div class="profile-dropdown" style="position: relative;">
-      <input type="checkbox" id="dropdown-toggle" hidden>
+    <div class="profile-dropdown">
+      <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle" hidden>
 
-      <label for="dropdown-toggle" class="profile-button" style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
-        <div class="avatar" style="width: 32px; height: 32px; background: #ccc; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white;">
+      <label for="dropdown-toggle" class="profile-button">
+        <div class="avatar">
           {% if user.profile.image %}
-          <img src="{{ user.profile.image.url }}" alt="User avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="{{ user.profile.image.url }}" alt="User avatar" class="avatar-image" />
           {% else %}
           {{ user.username|slice:":2"|upper }}
           {% endif %}
@@ -103,44 +62,16 @@
         <span>{{ user.username }}</span>
       </label>
 
-      <div class="dropdown-menu" style="
-          position: absolute;
-          right: 0;
-          top: 40px;
-          width: 180px;
-          background: white;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
-          padding: 10px 0;
-          display: none;
-          z-index: 100;
-        ">
-        <a href="{% url 'manager:worker-detail' user.id %}" style="display: block; padding: 8px 16px; text-decoration: none; color: black;">Profile</a>
-        <a href="#" style="display: block; padding: 8px 16px; text-decoration: none; color: black;">Settings</a>
-        <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+      <div class="dropdown-menu">
+        {% if user.is_authenticated and user.id %}
+          <a href="{% url 'manager:worker-detail' user.id %}" class="dropdown-item">Profile</a>
+        {% endif %}
+        <a href="#" class="dropdown-item">Settings</a>
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
           {% csrf_token %}
-          <button type="submit" style="width: 100%; padding: 8px 16px; border: none; background: none; text-align: left; cursor: pointer;">Logout</button>
+          <button type="submit" class="logout-btn">Logout</button>
         </form>
       </div>
     </div>
   </div>
-
-  <style>
-    /* Показати дропдаун при checked */
-    #notifications-toggle:checked ~ .dropdown-menu {
-      display: block !important;
-    }
-    #dropdown-toggle:checked ~ .dropdown-menu {
-      display: block !important;
-    }
-
-    /* Щоб дропдауни не відкривалися одночасно */
-    #notifications-toggle:checked ~ .dropdown-menu {
-      z-index: 100;
-    }
-    #dropdown-toggle:checked ~ .dropdown-menu {
-      z-index: 100;
-    }
-  </style>
 </header>

@@ -14,6 +14,8 @@ from .views import (
     WorkerUpdateView,
     WorkerDeleteView,
     toggle_task_status,
+    CompletedTaskListView,
+    PendingTaskListView,
 )
 
 urlpatterns = [
@@ -29,6 +31,8 @@ urlpatterns = [
     path("workers/<int:pk>/update/", WorkerUpdateView.as_view(), name="worker-update"),
     path("workers/<int:pk>/delete/", WorkerDeleteView.as_view(), name="worker-delete"),
     path("tasks/<int:pk>/toggle-status/", toggle_task_status, name="toggle-task-status"),
+    path("tasks/completed/", CompletedTaskListView.as_view(), name="completed-task-list"),
+    path("tasks/pending/", PendingTaskListView.as_view(), name="pending-task-list"),
 ]
 
 app_name = "manager"

@@ -1,47 +1,47 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block title %}Delete User - Task Manager{% endblock %}
+{% load static %}
 {% block content %}
-<div style="background-color: #f8fafc; min-height: 100vh; padding: 2rem 1rem;">
-    <div style="max-width: 500px; margin: 0 auto;">
+<link rel="stylesheet" href="{% static 'css/delete_user.css' %}">
+<div class="delete-page-container">
+    <div class="delete-card-container">
         
         <!-- Delete Confirmation Card -->
-        <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center;">
+        <div class="delete-card">
             
             <!-- Warning Icon -->
-            <div style="margin-bottom: 1.5rem;">
-                <div style="width: 60px; height: 60px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
-                    <i class="fas fa-exclamation-triangle" style="color: #dc2626; font-size: 1.5rem;"></i>
+            <div class="warning-icon-container">
+                <div class="warning-icon-circle">
+                    <i class="fas fa-exclamation-triangle warning-icon"></i>
                 </div>
             </div>
             
             <!-- Title -->
-            <h1 style="color: #1e293b; font-weight: 600; font-size: 1.5rem; margin-bottom: 1rem;">Delete User?</h1>
+            <h1 class="delete-title">Delete User?</h1>
             
             <!-- User Name -->
-            <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; margin: 1rem 0;">
-                <span style="color: #1e293b; font-weight: 500; font-size: 1rem;">{{ worker.username }}</span>
+            <div class="user-name-container">
+                <span class="user-name">{{ worker.username }}</span>
             </div>
             
             <!-- Warning Text -->
-            <p style="color: #64748b; margin: 1rem 0;">Are you sure you want to delete this user?</p>
-            <p style="color: #dc2626; font-weight: 500; font-size: 0.9rem; margin-bottom: 2rem;">This action cannot be undone.</p>
+            <p class="warning-text">Are you sure you want to delete this user?</p>
+            <p class="warning-text-danger">This action cannot be undone.</p>
             
             <!-- Form -->
             <form action="" method="post">
                 {% csrf_token %}
                 
                 <!-- Buttons -->
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button type="submit" 
-                            style="background: #dc2626; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; font-weight: 500; cursor: pointer;">
-                        <i class="fas fa-trash" style="margin-right: 0.5rem;"></i>
+                <div class="button-container">
+                    <button type="submit" class="delete-button">
+                        <i class="fas fa-trash button-icon"></i>
                         Delete
                     </button>
                     
-                    <a href="{% url 'manager:worker-list' %}" 
-                       style="background: #6b7280; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 500;">
-                        <i class="fas fa-times" style="margin-right: 0.5rem;"></i>
+                    <a href="{% url 'manager:worker-list' %}" class="cancel-button">
+                        <i class="fas fa-times button-icon"></i>
                         Cancel
                     </a>
                 </div>

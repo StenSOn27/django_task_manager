@@ -2,13 +2,7 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/task_styles.css' %}">
-<style>
-  .detail-item.status {
-    border-left-color: {% if task.is_completed %}#28a745{% else %}#dc3545{% endif %};
-    background: {% if task.is_completed %}linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%){% else %}linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%){% endif %};
-  }
-</style>
+<link rel="stylesheet" href="{% static 'css/task_detail_styles.css' %}">
 
 <div class="main-container">
   <!-- Left Column -->
@@ -16,43 +10,35 @@
     <!-- Task Details -->
     <div class="task-details">
       <!-- Task Name and Action Buttons -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
-        <h1 style="margin: 0; font-size: 2.5rem; font-weight: 700; color: #2c3e50; flex: 1; min-width: 300px;">
+      <div class="task-header">
+        <h1 class="task-title">
           {{ task.name }}
         </h1>
-        <div class="action-buttons" style="display: flex; gap: 10px; flex-shrink: 0;">
-          <a
-            href="{% url 'manager:task-update' pk=task.id %}"
-            class="btn btn-secondary btn-edit"
-            style="background-color: #6c757d; border: 2px solid #5a6268; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: flex; align-items: center; gap: 8px; font-weight: 600; transition: all 0.3s ease;"
-          >
+        <div class="action-buttons">
+          <a href="{% url 'manager:task-update' pk=task.id %}" class="btn btn-secondary btn-edit">
             <i class="fas fa-edit"></i> Edit Task
           </a>
-          <a
-            href="{% url 'manager:task-delete' pk=task.id %}"
-            class="btn btn-danger btn-delete"
-            style="background-color: #e74c3c; border: 2px solid #c0392b; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: flex; align-items: center; gap: 8px; font-weight: 600; transition: all 0.3s ease;"
-          >
+          <a href="{% url 'manager:task-delete' pk=task.id %}" class="btn btn-danger btn-delete">
             <i class="fas fa-trash"></i> Delete Task
           </a>
         </div>
       </div>
 
-      <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 1.8rem; font-weight: 700; border-bottom: 4px solid #3498db; padding-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+      <h2 class="section-title">
         <i class="fas fa-clipboard-list"></i> Task Details
       </h2>
       
       <div class="detail-grid">
         <div class="detail-item description">
-          <p style="margin: 0 0 10px 0; color: #2c3e50;">
-            <strong style="color: #34495e; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+          <p class="detail-label">
+            <strong class="detail-title">
               <i class="fas fa-align-left"></i> Description
             </strong>
           </p>
           <div class="description-container">
             <input type="checkbox" id="description-toggle" class="description-toggle">
             <div class="description-content">
-              <div class="description-text {% if task.description|length < 100 %}short-text{% endif %}" style="color: #5a6c7d; font-size: 1.1rem; line-height: 1.7;">
+              <div class="description-text {% if task.description|length < 100 %}short-text{% endif %}">
                 {{ task.description }}
               </div>
               <label for="description-toggle" class="expand-label">
@@ -64,20 +50,20 @@
         </div>
         
         <div class="detail-item deadline">
-          <p style="margin: 0; color: #2c3e50;">
-            <strong style="color: #856404; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <p class="detail-label">
+            <strong class="detail-title deadline-title">
               <i class="fas fa-calendar-alt"></i> Deadline
             </strong>
-            <span style="color: #856404; font-weight: 600; font-size: 1.1rem;">{{ task.deadline }}</span>
+            <span class="deadline-date">{{ task.deadline }}</span>
           </p>
         </div>
         
-        <div class="detail-item status">
-          <p style="margin: 0; color: #2c3e50;">
-            <strong style="color: {% if task.is_completed %}#155724{% else %}#721c24{% endif %}; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <div class="detail-item status {% if task.is_completed %}status-completed{% else %}status-progress{% endif %}">
+          <p class="detail-label">
+            <strong class="detail-title status-title">
               <i class="fas {% if task.is_completed %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i> Status
             </strong>
-            <span style="color: {% if task.is_completed %}#155724{% else %}#721c24{% endif %}; font-weight: 600; font-size: 1.1rem;">
+            <span class="status-text">
               {% if task.is_completed %}✓ Completed{% else %}⏳ In Progress{% endif %}
             </span>
           </p>
@@ -91,7 +77,7 @@
     <div class="assignees-section">
       <h2 class="section-title">
         <i class="fas fa-users"></i> Team Members
-        <span style="background: #9b59b6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin-left: auto;">
+        <span class="member-count">
           {{ task.assignees.count }}
         </span>
       </h2>
@@ -102,22 +88,22 @@
             <div class="worker-avatar">
               {{ worker.username|first|upper }}
             </div>
-            <div>
-              <h3 style="margin: 0; font-weight: 700; color: #2c3e50; font-size: 1.2rem;">
+            <div class="worker-header-info">
+              <h3 class="worker-name">
                 {{ worker.username }}
               </h3>
-              <p style="margin: 5px 0 0 0; color: #6c757d; font-size: 0.9rem;">
-                <i class="fas fa-briefcase" style="margin-right: 5px;"></i>
+              <p class="worker-position">
+                <i class="fas fa-briefcase"></i>
                 {{ worker.position }}
               </p>
             </div>
           </div>
           
           <div class="worker-info">
-            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 3px solid #3498db;">
-              <p style="margin: 0; color: #5a6c7d; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-envelope" style="color: #3498db;"></i>
-                <strong style="color: #34495e;">Email:</strong>
+            <div class="worker-email">
+              <p class="email-text">
+                <i class="fas fa-envelope"></i>
+                <strong>Email:</strong>
                 <span>{{ worker.email }}</span>
               </p>
             </div>
@@ -125,11 +111,11 @@
         </div>
       {% empty %}
         <div class="empty-state">
-          <div style="font-size: 4rem; margin-bottom: 20px; color: #6c757d;">
+          <div class="empty-icon">
             <i class="fas fa-user-slash"></i>
           </div>
-          <h3 style="margin: 0 0 10px 0; color: #6c757d; font-size: 1.3rem; font-weight: 600;">No Team Members</h3>
-          <p style="margin: 0; color: #adb5bd; font-size: 1rem;">This task hasn't been assigned to anyone yet.</p>
+          <h3 class="empty-title">No Team Members</h3>
+          <p class="empty-text">This task hasn't been assigned to anyone yet.</p>
         </div>
       {% endfor %}
     </div>

@@ -12,7 +12,7 @@ from manager.forms import (
     TaskNameSearchForm,
     WorkerCreationForm,
 )
-from .models import Worker, Task
+from .models import Worker, Task, CompletedTask, PendingTask
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
@@ -26,7 +26,8 @@ def index(request):
     """View function for the home page of the site."""
     num_workers = Worker.objects.count()
     num_tasks = Task.objects.count()
-
+    completed_tasks = Task.objects.filter(is_completed=True).count()
+    incomplete_tasks = Task.objects.filter(is_completed=False).count()
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
 
@@ -34,6 +35,8 @@ def index(request):
         "num_workers": num_workers,
         "num_tasks": num_tasks,
         "num_visits": num_visits + 1,
+        "completed_tasks": completed_tasks,
+        "incomplete_tasks": incomplete_tasks
     }
 
     return render(request, "manager/index.html", context=context)
@@ -117,13 +120,10 @@ class WorkerDeleteView(generic.DeleteView):
 
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
-    """Generic class-based view for a list of tasks."""
-
     model = Task
     template_name = "manager/task-list.html"
     context_object_name = "task_list"
     paginate_by = 5
-    queryset = Task.objects.prefetch_related()
     ordering = ["-is_completed", "deadline"]
 
     def get_queryset(self):
@@ -138,11 +138,25 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(TaskListView, self).get_context_data(**kwargs)
-
         name = self.request.GET.get("name", "")
 
+        context["num_tasks"] = Task.objects.count()
+        context["completed_tasks"] = Task.objects.filter(is_completed=True).count()
+        context["pending_tasks"] = Task.objects.filter(is_completed=False).count()
         context["search_form"] = TaskNameSearchForm(initial={"name": name})
         return context
+
+
+class CompletedTaskListView(TaskListView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(is_completed=True)
+
+
+class PendingTaskListView(TaskListView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(is_completed=False)
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
