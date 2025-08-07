@@ -1,0 +1,124 @@
+﻿{% extends "base.html" %} 
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/task_detail_styles.css' %}">
+
+<div class="main-container">
+  <!-- Left Column -->
+  <div class="left-column">
+    <!-- Task Details -->
+    <div class="task-details">
+      <!-- Task Name and Action Buttons -->
+      <div class="task-header">
+        <h1 class="task-title">
+          {{ task.name }}
+        </h1>
+        <div class="action-buttons">
+          <a href="{% url 'manager:task-update' pk=task.id %}" class="btn btn-secondary btn-edit">
+            <i class="fas fa-edit"></i> Edit Task
+          </a>
+          <a href="{% url 'manager:task-delete' pk=task.id %}" class="btn btn-danger btn-delete">
+            <i class="fas fa-trash"></i> Delete Task
+          </a>
+        </div>
+      </div>
+
+      <h2 class="section-title">
+        <i class="fas fa-clipboard-list"></i> Task Details
+      </h2>
+      
+      <div class="detail-grid">
+        <div class="detail-item description">
+          <p class="detail-label">
+            <strong class="detail-title">
+              <i class="fas fa-align-left"></i> Description
+            </strong>
+          </p>
+          <div class="description-container">
+            <input type="checkbox" id="description-toggle" class="description-toggle">
+            <div class="description-content">
+              <div class="description-text {% if task.description|length < 100 %}short-text{% endif %}">
+                {{ task.description }}
+              </div>
+              <label for="description-toggle" class="expand-label">
+                <span class="expand-text"></span>
+                <i class="fas fa-chevron-down expand-icon"></i>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="detail-item deadline">
+          <p class="detail-label">
+            <strong class="detail-title deadline-title">
+              <i class="fas fa-calendar-alt"></i> Deadline
+            </strong>
+            <span class="deadline-date">{{ task.deadline }}</span>
+          </p>
+        </div>
+        
+        <div class="detail-item status {% if task.is_completed %}status-completed{% else %}status-progress{% endif %}">
+          <p class="detail-label">
+            <strong class="detail-title status-title">
+              <i class="fas {% if task.is_completed %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i> Status
+            </strong>
+            <span class="status-text">
+              {% if task.is_completed %}✓ Completed{% else %}⏳ In Progress{% endif %}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column - Assignees -->
+  <div class="right-column">
+    <div class="assignees-section">
+      <h2 class="section-title">
+        <i class="fas fa-users"></i> Team Members
+        <span class="member-count">
+          {{ task.assignees.count }}
+        </span>
+      </h2>
+      
+      {% for worker in task.assignees.all %}
+        <div class="worker-card">
+          <div class="worker-header">
+            <div class="worker-avatar">
+              {{ worker.username|first|upper }}
+            </div>
+            <div class="worker-header-info">
+              <h3 class="worker-name">
+                {{ worker.username }}
+              </h3>
+              <p class="worker-position">
+                <i class="fas fa-briefcase"></i>
+                {{ worker.position }}
+              </p>
+            </div>
+          </div>
+          
+          <div class="worker-info">
+            <div class="worker-email">
+              <p class="email-text">
+                <i class="fas fa-envelope"></i>
+                <strong>Email:</strong>
+                <span>{{ worker.email }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-user-slash"></i>
+          </div>
+          <h3 class="empty-title">No Team Members</h3>
+          <p class="empty-text">This task hasn't been assigned to anyone yet.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

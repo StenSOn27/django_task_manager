@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/task_form_styles.css' %}" />
+
+<!-- Page Content -->
+<div class="page-content">
+    
+    <!-- Page Title -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <div class="title-icon">
+                <i class="fas fa-plus"></i>
+            </div>
+            {{ object|yesno:"Edit task,Create task" }}
+        </h1>
+    </div>
+    
+    <!-- Form Errors -->
+    {% if form.errors %}
+    <div class="form-errors">
+        <div class="error-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Form contains errors</h3>
+        </div>
+        <p class="error-message">Please fix the following errors and try again:</p>
+        <ul class="error-list">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ field|title }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <!-- Form -->
+    <form method="post" action="" novalidate class="task-form">
+        {% csrf_token %}
+        
+        <!-- Row 1: Name, Priority, Task Type -->
+        <div class="form-row form-row-three">
+            <div class="form-field">
+                <label for="{{ form.name.id_for_label }}" class="field-label">
+                    <i class="fas fa-tag"></i>
+                    Name
+                    <span class="required">*</span>
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="field-errors">
+                        {% for error in form.name.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-field">
+                <label for="{{ form.priority.id_for_label }}" class="field-label">
+                    <i class="fas fa-flag"></i>
+                    Priority
+                    <span class="required">*</span>
+                </label>
+                {{ form.priority }}
+                {% if form.priority.errors %}
+                    <div class="field-errors">
+                        {% for error in form.priority.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-field">
+                <label for="{{ form.task_type.id_for_label }}" class="field-label">
+                    <i class="fas fa-layer-group"></i>
+                    Task type
+                    <span class="required">*</span>
+                </label>
+                {{ form.task_type }}
+                {% if form.task_type.errors %}
+                    <div class="field-errors">
+                        {% for error in form.task_type.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Row 2: Description and Assignees -->
+        <div class="form-row form-row-two form-row-flex">
+            <div class="form-field form-field-description">
+                <label for="{{ form.description.id_for_label }}" class="field-label">
+                    <i class="fas fa-align-left"></i>
+                    Description
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="field-errors">
+                        {% for error in form.description.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-field form-field-assignees">
+                <label class="field-label">
+                    <i class="fas fa-users"></i>
+                    Assignees
+                    <span class="required">*</span>
+                </label>
+                <div class="assignees-container">
+                    <div class="assignees-list">
+                        {% for choice in form.assignees %}
+                        <label class="assignee-item">
+                            {{ choice.tag }}
+                            <div class="assignee-content">
+                                {% with email=choice.choice_label|slice:":2"|upper %}
+                                    <div class="assignee-avatar avatar-color-{{ forloop.counter0|add:1 }}">{{ email }}</div>
+                                {% endwith %}
+                                <div class="assignee-info">
+                                    <div class="assignee-name">{{ choice.choice_label }}</div> 
+                                </div>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if form.assignees.errors %}
+                    <div class="field-errors">
+                        {% for error in form.assignees.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Row 3: Deadline -->
+        <div class="form-row form-row-two">
+            <div class="form-field">
+                <label for="{{ form.deadline.id_for_label }}" class="field-label">
+                    <i class="fas fa-clock"></i>
+                    Deadline
+                </label>
+                {{ form.deadline }}
+                {% if form.deadline.errors %}
+                    <div class="field-errors">
+                        {% for error in form.deadline.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-field-empty"></div>
+        </div>
+        
+        {% if is_object %}
+            <div class="form-field completion-field">
+                <label for="{{ form.is_completed.id_for_label }}" class="field-label">
+                    <i class="fas fa-check-circle"></i>
+                    Completed
+                </label>
+                <div class="checkbox-wrapper">
+                    {{ form.is_completed }}
+                    {% if form.is_completed.errors %}
+                        <div class="field-errors">
+                            {% for error in form.is_completed.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>                
+        {% endif %}
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <a href="{% url 'manager:task-list' %}" class="btn btn-cancel">
+                <i class="fas fa-times"></i>
+                Cancel
+            </a>
+            <button type="reset" class="btn btn-reset">
+                <i class="fas fa-redo"></i>
+                Reset
+            </button>
+            <button type="submit" class="btn btn-submit">
+                <i class="fas fa-check"></i>
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

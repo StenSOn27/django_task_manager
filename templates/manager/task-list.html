@@ -1,0 +1,159 @@
+﻿{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Task List - Task Manager{% endblock %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/task_list_styles.css' %}" />
+
+{% csrf_token %}
+<!-- Task Header -->
+<div class="task-header-section">
+  <h1 class="task-title">Task List</h1>
+  <p class="task-subtitle">List of all tasks</p>
+</div>
+
+<div class="task-controls">
+    <div class="controls-left">
+        <a href="{% url 'manager:task-create' %}" class="btn-new-task">
+            <i class="fas fa-plus"></i>
+            <span>New Task</span>
+        </a>
+    </div>
+    <!-- Filter Buttons -->
+    <div class="filter-buttons">
+        <a href="{% url 'manager:task-list' %}" class="filter-btn">
+            <i class="fas fa-list"></i>
+            Show All
+            <span class="filter-count">{{ num_tasks }}</span>
+        </a>
+        <a href="{% url 'manager:completed-task-list' %}" class="filter-btn">
+            <i class="fas fa-check-circle"></i>
+            Completed
+            <span class="filter-count">{{ completed_tasks }}</span>
+        </a>
+        <a href="{% url 'manager:pending-task-list' %}" class="filter-btn">
+            <i class="fas fa-clock"></i>
+            In Progress
+            <span class="filter-count">{{ pending_tasks }}</span>
+        </a>
+    </div>
+    <form action="" method="get" class="search-form">
+        {% if request.GET.status %}
+            <input type="hidden" name="status" value="{{ request.GET.status }}">
+        {% endif %}
+        <div class="form-group flex-grow-1 mb-0">
+          {{ search_form|crispy }}
+        </div>
+        <button type="submit" class="search-button">
+          <i class="fas fa-search"></i>Search
+        </button>
+    </form>
+</div>
+
+<!-- Task Container -->
+<div class="task-container">
+    {% for task in task_list %}
+    <div class="task-item {% if task.is_completed %}task-completed{% endif %}" data-task-id="{{ task.id }}">
+        <div class="task-checkbox">
+            <input type="checkbox" 
+                   id="task-{{ task.id }}" 
+                   class="task-checkbox-input"
+                   {% if task.is_completed %}checked{% endif %}
+                   onchange="toggleTaskStatus({{ task.id }}, this)">
+        </div>
+        
+        <div class="task-content">
+            <h3 class="task-name {% if task.is_completed %}task-name-completed{% endif %}">{{ task.name }}</h3>
+            <div class="task-meta">
+                <div class="task-deadline">
+                    <i class="far fa-clock"></i>
+                    <span>{{ task.deadline|date:"M d, Y" }}</span>
+                </div>
+                <div class="task-badges">
+                    <div class="status-badge {% if task.is_completed %}status-completed{% else %}status-progress{% endif %}" id="status-badge-{{ task.id }}">
+                        {% if task.is_completed %}COMPLETED{% else %}IN PROGRESS{% endif %}
+                    </div>
+                    {% if task.priority %}
+                    <div class="priority-badge priority-{{ task.priority|lower }}">
+                        {{ task.priority|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <p class="task-description {% if task.is_completed %}task-description-completed{% endif %}">
+                {% if task.description %}{{ task.description }}{% else %}no description{% endif %}
+            </p>
+        </div>
+        
+        <div class="task-actions">
+            <a href="{% url 'manager:task-detail' task.id %}" class="task-detail-btn" title="View Details">
+                <i class="fas fa-eye"></i>
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-tasks">
+        <p>No tasks found. Create a new task to get started.</p>
+    </div>
+    {% endfor %}
+
+</div>
+
+<script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function toggleTaskStatus(taskId, checkboxElem) {
+    fetch(`/tasks/${taskId}/toggle-status/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+      }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Network response error");
+      return response.json();
+    })
+    .then(data => {
+      if (data.status === "success") {
+        const taskItem = checkboxElem.closest('[data-task-id]');
+        const badge = document.getElementById(`status-badge-${taskId}`);
+        const title = taskItem.querySelector('h3');
+        const description = taskItem.querySelector('p');
+
+        if (data.is_completed) {
+          taskItem.style.backgroundColor = '#f8f9fe';
+          title.style.textDecoration = 'line-through';
+          title.style.opacity = '0.7';
+          description.style.opacity = '0.6';
+          badge.style.backgroundColor = '#2dce89';
+          badge.textContent = 'COMPLETED';
+        } else {
+          taskItem.style.backgroundColor = 'white';
+          title.style.textDecoration = 'none';
+          title.style.opacity = '1';
+          description.style.opacity = '1';
+          badge.style.backgroundColor = '#5e72e4';
+          badge.textContent = 'IN PROGRESS';
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Updating task status:", error);
+    });
+  }
+</script>
+{% endblock %}

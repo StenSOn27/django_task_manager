@@ -1,0 +1,47 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <i class="logo-icon fas fa-bolt"></i>
+      <span>Task Manager</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a
+          href="{% url 'manager:index' %}"
+          class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <span>HomePage</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="{% url 'manager:worker-list' %}"
+          class="nav-link {% if request.resolver_match.url_name == 'users' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-users"></i>
+          <span>Users List</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="{% url 'manager:task-list' %}"
+          class="nav-link {% if request.resolver_match.url_name == 'tasks' %}active{% endif %}"
+        >
+          <i class="nav-icon fas fa-tasks"></i>
+          <span>Task List</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="#" class="footer-link">
+      <i class="nav-icon fas fa-book"></i>
+      <span>Documentation</span>
+    </a>
+  </div>
+</aside>

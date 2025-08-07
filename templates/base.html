@@ -1,0 +1,33 @@
+﻿<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Task Manager{% endblock %}</title>
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar -->
+      {% include 'includes/sidebar.html' %}
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Top Navigation -->
+        {% include 'includes/top-navigation.html' %}
+
+        <!-- Main Content -->
+        {% block content %}{% endblock %}
+
+        <!-- Pagination (if needed) -->
+        {% block pagination %}{% include 'includes/pagination.html' %}{%endblock %}
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+{% if is_paginated %}
+{% load query_transform %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+<div class="pagination-container">
+  <div class="pagination-info">
+    Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} out of {{ paginator.count }} entries
+  </div>
+
+  <nav class="pagination-controls" aria-label="Page navigation">
+
+    <!-- Previous Page -->
+    {% if page_obj.has_previous %}
+    <a
+      href="?{% query_transform request page=page_obj.previous_page_number %}"
+      class="page-link page-link-nav"
+      aria-label="Previous page"
+    >
+      Previous
+    </a>
+    {% else %}
+    <span class="page-link page-link-nav page-link-disabled" aria-label="Previous page">
+      Previous
+    </span>
+    {% endif %}
+
+    <!-- Page Numbers -->
+    {% for num in paginator.page_range %}
+      {% if page_obj.number == num %}
+      <span
+        class="page-link page-link-active"
+        aria-current="page"
+        aria-label="Current page {{ num }}"
+      >
+        {{ num }}
+      </span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <a
+        href="?{% query_transform request page=num %}"
+        class="page-link"
+        aria-label="Go to page {{ num }}"
+      >
+        {{ num }}
+      </a>
+      {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+      <span class="page-ellipsis" aria-hidden="true">...</span>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Next Page -->
+    {% if page_obj.has_next %}
+    <a
+      href="?{% query_transform request page=page_obj.next_page_number %}"
+      class="page-link page-link-nav"
+      aria-label="Next page"
+    >
+      Next
+    </a>
+    {% else %}
+    <span class="page-link page-link-nav page-link-disabled" aria-label="Next page">
+      Next
+    </span>
+    {% endif %}
+  </nav>
+</div>
+{% endif %}

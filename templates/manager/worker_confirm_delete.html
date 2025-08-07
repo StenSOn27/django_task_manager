@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Delete User - Task Manager{% endblock %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/delete_user.css' %}">
+<div class="delete-page-container">
+    <div class="delete-card-container">
+        
+        <!-- Delete Confirmation Card -->
+        <div class="delete-card">
+            
+            <!-- Warning Icon -->
+            <div class="warning-icon-container">
+                <div class="warning-icon-circle">
+                    <i class="fas fa-exclamation-triangle warning-icon"></i>
+                </div>
+            </div>
+            
+            <!-- Title -->
+            <h1 class="delete-title">Delete User?</h1>
+            
+            <!-- User Name -->
+            <div class="user-name-container">
+                <span class="user-name">{{ worker.username }}</span>
+            </div>
+            
+            <!-- Warning Text -->
+            <p class="warning-text">Are you sure you want to delete this user?</p>
+            <p class="warning-text-danger">This action cannot be undone.</p>
+            
+            <!-- Form -->
+            <form action="" method="post">
+                {% csrf_token %}
+                
+                <!-- Buttons -->
+                <div class="button-container">
+                    <button type="submit" class="delete-button">
+                        <i class="fas fa-trash button-icon"></i>
+                        Delete
+                    </button>
+                    
+                    <a href="{% url 'manager:worker-list' %}" class="cancel-button">
+                        <i class="fas fa-times button-icon"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

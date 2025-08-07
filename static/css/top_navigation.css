@@ -1,0 +1,168 @@
+﻿.top-nav {
+  background-color: #f7f9fc;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-left-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.burger-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 8px 12px 8px 32px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.nav-right-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.notifications-dropdown {
+  position: relative;
+}
+
+.notifications-toggle {
+  display: none;
+}
+
+.notifications-label {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 999px;
+}
+
+.profile-dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  display: none;
+}
+
+.profile-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: #ccc;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  width: 250px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+  padding: 10px 0;
+  display: none;
+  z-index: 100;
+}
+
+.profile-dropdown .dropdown-menu {
+  top: 40px;
+  width: 180px;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: black;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Показати дропдаун при checked */
+#notifications-toggle:checked ~ .dropdown-menu {
+  display: block !important;
+}
+
+#dropdown-toggle:checked ~ .dropdown-menu {
+  display: block !important;
+}
+
+/* Щоб дропдауни не відкривалися одночасно */
+#notifications-toggle:checked ~ .dropdown-menu {
+  z-index: 100;
+}
+
+#dropdown-toggle:checked ~ .dropdown-menu {
+  z-index: 100;
+}

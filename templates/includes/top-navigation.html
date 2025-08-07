@@ -1,0 +1,74 @@
+﻿{% load static %}
+<link rel="stylesheet" href="{% static 'css/top_navigation.css' %}">
+<header class="top-nav">
+  <!-- Меню та пошук -->
+  <div class="nav-left-section">
+    <!-- Бургер-меню -->
+    <button class="burger-menu-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Пошук -->
+    <div class="search-wrapper">
+      <form action="#" method="get" class="search-form">
+        <input type="search" placeholder="Search" aria-label="Search" class="search-input" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </svg>
+      </form>
+    </div>
+  </div>
+
+  <!-- Сповіщення та користувач -->
+  <div class="nav-right-section">
+    <!-- Сповіщення з дропдауном -->
+    <div class="notifications-dropdown">
+      <input type="checkbox" id="notifications-toggle" class="notifications-toggle" hidden>
+      <label for="notifications-toggle" class="notifications-label">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+        </svg>
+        <span class="notification-badge">1</span>
+      </label>
+      <div class="dropdown-menu">
+        <a href="#" class="dropdown-item">Not implemented😔</a>
+      </div>
+    </div>
+
+    <!-- Профіль і дропдаун -->
+    <div class="profile-dropdown">
+      <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle" hidden>
+
+      <label for="dropdown-toggle" class="profile-button">
+        <div class="avatar">
+          {% if user.profile.image %}
+          <img src="{{ user.profile.image.url }}" alt="User avatar" class="avatar-image" />
+          {% else %}
+          {{ user.username|slice:":2"|upper }}
+          {% endif %}
+        </div>
+        <span>{{ user.username }}</span>
+      </label>
+
+      <div class="dropdown-menu">
+        {% if user.is_authenticated and user.id %}
+          <a href="{% url 'manager:worker-detail' user.id %}" class="dropdown-item">Profile</a>
+        {% endif %}
+        <a href="#" class="dropdown-item">Settings</a>
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>

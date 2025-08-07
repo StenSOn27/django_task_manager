@@ -1,0 +1,188 @@
+﻿{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/worker_detail.css' %}">
+    <div class="worker-detail-container">
+        <!-- Main Content -->
+        <div class="mains-content">
+            <div class="content-layout">
+                
+                <!-- Left Column - Worker Information Form -->
+                <div class="left-column">
+                    
+                    <h2 class="section-title">General information</h2>
+                    
+                    <!-- Personal Details -->
+                    <div class="form-grid">
+                        <div>
+                            <label class="form-label">First Name</label>
+                            <div class="form-value">
+                                {{ worker.first_name }}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Last Name</label>
+                            <div class="form-value">
+                                {{ worker.last_name }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div>
+                            <label class="form-label">Position</label>
+                            <div class="form-value">
+                                {{ worker.position }}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Username</label>
+                            <div class="form-value">
+                                {{ worker.username }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div>
+                            <label class="form-label">Email</label>
+                            <div class="form-value">
+                                {{ worker.email }}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Status</label>
+                            <div class="form-value">
+                                <span class="status-badge">
+                                    Active
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <h3 class="tasks-title">Assigned Tasks</h3>
+                    
+                    <div class="tasks-container">
+                        {% for task in worker.tasks.all %}
+                        <div class="task-card">
+                            <div class="task-header">
+                                <h4 class="task-title">{{ task.name }}</h4>
+                                <div class="task-badges">
+                                    <!-- Priority Badge -->
+                                    <span class="badge {% if task.priority|lower == 'urgent' %}priority-urgent{% elif task.priority|lower == 'high' %}priority-high{% elif task.priority|lower == 'medium' %}priority-medium{% elif task.priority|lower == 'low' %}priority-low{% endif %}">
+                                        {{ task.priority }}
+                                    </span>
+                                    
+                                    <!-- Status Badge -->
+                                    {% if task.is_completed %}
+                                        <span class="badge status-completed">
+                                            Completed
+                                        </span>
+                                    {% else %}
+                                        <span class="badge status-in-progress">
+                                            In Progress
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p class="task-description">{{ task.description }}</p>
+                            <div class="task-details">
+                                <div>
+                                    <span class="task-detail-label">Deadline:</span>
+                                    <div class="task-detail-value">{{ task.deadline|date:"M d, Y" }}</div>
+                                </div>
+                                <div>
+                                    <span class="task-detail-label">Type:</span>
+                                    <div class="task-detail-value">{{ task.task_type }}</div>
+                                </div>
+                                <div>
+                                    <span class="task-detail-label">Assignees:</span>
+                                    <div class="task-detail-value">
+                                        {% if task.assignees.all %}
+                                            {{ task.assignees.all|join:", " }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="no-tasks">
+                            <i class="fas fa-clipboard-list no-tasks-icon"></i>
+                            <p class="no-tasks-text">No tasks assigned</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Right Column - Profile Card -->
+                <div class="right-column">
+                    
+                    <!-- Profile Card -->
+                    <div class="profile-card">
+                        
+                        <!-- Profile Header with Background -->
+                        <div class="profile-header">
+                            <div class="profile-avatar-container">
+                                <div class="profile-avatar">
+                                    <span class="profile-avatar-text">{{ worker.username|slice:":2"|upper }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Info -->
+                        <div class="profile-info">
+                            <h3 class="profile-name">{{ worker.username }}</h3>
+                            <p class="profile-email">{{ worker.email }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Task Statistics -->
+                    <div class="statistics-card">
+                        <h4 class="statistics-title">Task Statistics</h4>
+                        
+                        <div class="statistics-list">
+                            <!-- Total Tasks -->
+                            <div class="statistic-item">
+                                <span class="statistic-label">Total Tasks</span>
+                                <span class="statistic-total">
+                                    {{ total_tasks_count }}
+                                </span>
+                            </div>
+
+                            <!-- Completed -->
+                            <div class="statistic-item">
+                                <span class="statistic-label">Completed</span>
+                                <span class="statistic-completed">
+                                    {{ completed_tasks_count }}
+                                </span>
+                            </div>
+
+                            <!-- In Progress -->
+                            <div class="statistic-item">
+                                <span class="statistic-label">In Progress</span>
+                                <span class="statistic-progress">
+                                    {{ in_progress_tasks_count }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="{% url 'manager:worker-update' pk=worker.id %}" class="edit-button">
+                            <i class="fas fa-edit button-icon"></i>
+                            Edit Worker
+                        </a>
+                        <a href="{% url 'manager:worker-delete' pk=worker.id %}" class="delete-button">
+                            <i class="fas fa-trash button-icon"></i>
+                            Delete Worker
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
