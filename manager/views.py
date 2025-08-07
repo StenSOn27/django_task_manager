@@ -42,7 +42,7 @@ def index(request):
     return render(request, "manager/index.html", context=context)
 
 
-class WorkerListView(generic.ListView):
+class WorkerListView(LoginRequiredMixin, generic.ListView):
     """Generic class-based view for a list of workers."""
 
     model = Worker
@@ -69,7 +69,7 @@ class WorkerListView(generic.ListView):
         return context
 
 
-class WorkerDetailView(generic.DetailView):
+class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     """Generic class-based view for a worker's detail."""
 
     model = Worker
@@ -90,11 +90,11 @@ class WorkerDetailView(generic.DetailView):
 class WorkerCreateView(generic.CreateView):
     model = Worker
     form_class = WorkerCreationForm
-    template_name = "manager/worker-form.html"
+    template_name = "registration/worker-form.html"
     success_url = reverse_lazy("manager:worker-list")
 
 
-class WorkerUpdateView(generic.UpdateView):
+class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
     """Generic class-based view for updating a worker's details."""
 
     model = Worker
@@ -111,7 +111,7 @@ class WorkerUpdateView(generic.UpdateView):
         return context
 
 
-class WorkerDeleteView(generic.DeleteView):
+class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
     """Generic class-based view for deleting a worker."""
 
     model = Worker

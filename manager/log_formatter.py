@@ -11,4 +11,3 @@ class CustomJsonFormatter(JsonFormatter):
         else:
             log_record['level'] = record.levelname
 
-formatter = CustomJsonFormatter('%(timestamp)s %(level)s %(name)s %(message)s')

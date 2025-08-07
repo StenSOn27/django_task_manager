@@ -19,18 +19,6 @@
       </li>
       <li class="nav-item">
         <a
-          href="#"
-          class="nav-link {% if request.resolver_match.url_name == 'messages' %}active{% endif %}"
-        >
-          <i class="nav-icon fas fa-envelope"></i>
-          <span>Messages</span>
-          {% if unread_messages %}
-          <span class="badge">{{ unread_messages }}</span>
-          {% endif %}
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
           href="{% url 'manager:worker-list' %}"
           class="nav-link {% if request.resolver_match.url_name == 'users' %}active{% endif %}"
         >
@@ -45,15 +33,6 @@
         >
           <i class="nav-icon fas fa-tasks"></i>
           <span>Task List</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
-          href="#"
-          class="nav-link {% if request.resolver_match.url_name == 'calendar' %}active{% endif %}"
-        >
-          <i class="nav-icon fas fa-calendar"></i>
-          <span>Calendar</span>
         </a>
       </li>
     </ul>
