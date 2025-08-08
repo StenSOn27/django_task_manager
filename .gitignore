@@ -25,7 +25,7 @@ migrations/
 
 # C extensions
 *.so
-
+info.log
 # Distribution / packaging
 .Python
 build/
