@@ -73,10 +73,6 @@ class CompletedTask(Task):
         proxy = True
         ordering = ["-deadline"]
 
-    def is_recently_completed(self):
-        from django.utils.timezone import now
-        return self.is_completed and (now().date() - self.deadline).days <= 7
-    
 
 class PendingTask(Task):
     class Meta:

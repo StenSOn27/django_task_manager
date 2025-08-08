@@ -1,9 +1,6 @@
-from dis import Positions
-import json
 import logging
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from manager.forms import (
@@ -12,7 +9,7 @@ from manager.forms import (
     TaskNameSearchForm,
     WorkerCreationForm,
 )
-from .models import Worker, Task, CompletedTask, PendingTask
+from .models import Worker, Task
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView

@@ -1,5 +1,4 @@
-﻿from unittest.mock import Base
-from django.contrib.auth.base_user import BaseUserManager
+﻿from django.contrib.auth.base_user import BaseUserManager
 import string
 import random
 
