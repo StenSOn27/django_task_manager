@@ -52,3 +52,5 @@ Before running this project, make sure you have the following installed:
     source venv/bin/activate (on macOS)
     pip install -r requirements.txt
     ```
+
+Link to deployed project: https://django-task-manager-1hy6.onrender.com/
