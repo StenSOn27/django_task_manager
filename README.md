@@ -54,3 +54,10 @@ Before running this project, make sure you have the following installed:
     ```
 
 Link to deployed project: https://django-task-manager-1hy6.onrender.com/
+
+🧪 Test User Account
+To explore the functionality of the site without registering, you can use the following test account:
+```
+Login: user  
+Password: user12345
+```
